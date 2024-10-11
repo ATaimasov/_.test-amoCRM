@@ -9,9 +9,6 @@ export const useListStore = defineStore('listStore', {
             { name: 'Компания', value: 'companies', },
         ],
         entityCreatedList: [ 
-            { entity: 'Сделка', id: 0, },
-            { entity: 'Контакт', id: 1, },
-
         ],
         loading: false
     }),

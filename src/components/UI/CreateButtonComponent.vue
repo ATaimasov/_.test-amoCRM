@@ -16,54 +16,51 @@
 import { computed, ref } from 'vue'
 import { useListStore } from '@/stores/useListStore';
 import LoadingSpinner from '@/components/UI/LoadingSpinner.vue';
-import axios from 'axios';
 import { getAccessToken } from '@/utils/getAccessToken';
 
 const store = useListStore();
 const selectedEntity = computed(() => store.selectedEntity);
 const entityList = computed(() => store.entityList);
+const entityCreatedList = computed(() => store.entityCreatedList);
 
 const loading = ref(false);
-
-const API_URL = 'https://api.amocrm.com/api/v4';
 
 const createEntity = async () => {
     loading.value = true;
     try {
-        const {accessToken} = await getAccessToken();
-        console.log("",  accessToken);
-        if (!accessToken) {
+        const {access_token, base_domain} = await getAccessToken();
+        if (!access_token) {
             console.error('Токен доступа не найден');
             return null;
         }
 
-        const response = await axios.post(API_URL + selectedEntity.value, 
-            {
-                headers: {
-                    'Authorization': `Bearer ${accessToken}` ,
-                    'Content-Type': 'application/json'
-                }
-            }
-        );
+        const API_URL =`https://${base_domain}/api/v4/${selectedEntity.value}`
 
-        console.log("response",  response);
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${access_token}` ,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: ['test'],
+            }),
+        })
 
-        handleSuccessfulResponse(response);
+        const result = await response.json();
+
+        handleSuccessfulResponse(response, result);
     } catch (err) {
         handleError(err);
     }
 }
 
-const handleSuccessfulResponse = (response) => {
+const handleSuccessfulResponse = (response, result) => {
     if(response.status === 200) {
+        addEntity(result)
 
-        const responseData = response.data;
-        addEntity(responseData)
-
-    } else if (data.status === 401) {
-        console.error("Пользователь не авторизирован", response.data)
-    } else if (data.status === 400) {
-        console.error("Переданы некорректные данные. Подробности доступны в теле ответа", response.data)
+    } else if (response.status === 400) {
+        console.error("Переданы некорректные данные. Подробности доступны в теле ответа", response)
     }
     updateElementState()
 }
@@ -74,16 +71,40 @@ const updateElementState = () => {
 }
 
 const handleError = (err) => {
+    if(err.status === 401) {
+        console.error("Пользователь не авторизирован", err)
+    } 
+    
     console.error("Произошла ошибка", err)
+    
+
+
     updateElementState()
 }
 
-const addEntity = (responseData) => {
-    entityList.value.push({
-        id: responseData.id,
-        name: responseData.request_id
+
+
+const addEntity = (result) => {
+
+    let entity = ''
+    switch (selectedEntity.value) {
+        case 'leads':
+            entity = 'Сделка'
+            break
+        case 'contacts':
+            entity = 'Контакт'
+            break
+        case 'companies':
+            entity = 'Компания'
+            break
+    }
+
+    entityCreatedList.value.push({
+        id: result._embedded[selectedEntity.value][0].id,
+        entity: entity
     });
-    console.info("Контакты были успешно созданы", responseData)
+    console.info("Сущность была успешно создана", result._embedded.leads)
+    console.log("entityList",  entityCreatedList.value)
 }
 
 
