@@ -48,6 +48,7 @@ const createEntity = async () => {
         })
 
         const result = await response.json();
+        console.log("response", response);
 
         handleSuccessfulResponse(response, result);
     } catch (err) {
@@ -103,7 +104,7 @@ const addEntity = (result) => {
         id: result._embedded[selectedEntity.value][0].id,
         entity: entity
     });
-    console.info("Сущность была успешно создана", result._embedded.leads)
+    console.info("Сущность была успешно создана", result)
     console.log("entityList",  entityCreatedList.value)
 }
 

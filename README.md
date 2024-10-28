@@ -1,29 +1,54 @@
-# vue-project
 
-This template should help get you started developing with Vue 3 in Vite.
+# Создание сущностей в amoCRM
 
-## Recommended IDE Setup
+## Введение
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Проект был выполнен в рамках тестового задания на позицию FullStack-разработчика (без поднятия бэка). 
+Ссылка на копию тестового (убраны только контакты): <a href="https://docs.google.com/document/d/10aSpeDGVZ35hNGYHZE6E18haKmZ-Mt763cDKEevRMFY/edit?usp=sharing" target='_blank'>тут</a>
 
-## Customize configuration
+Проект на сервере: <a href="https://test-amocrm.xn--80aag0apnud.xn--p1ai/" target='_blank'>тут</a>
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+Проект заключается в странице, где можно выбрать одну из трех сущностей для создания в amoCRM и, соответственно, создать ее. 
+Новая созданная сущность отобразится на странице в рамках активной сессии и будет иметь ID, полученный от amoCRM.
 
-## Project Setup
+Перед созданием сущности происходит запрос токена с которым впоследствии происходит отправка POST запроса для создания сущности в аккаунте amoCRM
 
-```sh
-npm install
-```
+## Предупреждение
 
-### Compile and Hot-Reload for Development
+Запрос токена производится по URL отправителя тестового задания. Нет гарантий, что получение токена впоследствии будет работать. 
+[Видео с выполненным тестовым](./.readme_dir/result.mp4)
 
-```sh
-npm run dev
-```
+Кроме того, возможно у вас не будет работать код из-за предварительной проверки CORS.
+Запустить изолированную браузерную среду c отключенной проверкой можно следующей командой в консоли:
+`"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --user-data-dir="C://chrome-dev-disabled-security" --disable-web-security --disable-site-isolation-trials`
 
-### Compile and Minify for Production
+## Установка и запуск проекта
 
-```sh
-npm run build
-```
+Клонировать репозиторий:
+
+    git clone https://github.com/ATaimasov/_.test-amoCRM
+
+Установить зависимости:
+
+    npm install
+
+Запустить проект:
+
+    npm run dev
+
+
+## Используемые технологии и подходы
+
+#### Основа:
+- Vue
+- CSS;
+- Pinia;
+
+Дополнительно использовано в разработке:
+- axios
+
+
+
+
+
+
